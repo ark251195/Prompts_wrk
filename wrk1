@@ -1,0 +1,132 @@
+You are acting as a senior software architect analyzing an existing codebase.
+
+Your task is NOT to modify code or generate new implementation.
+
+Your task is to explain and document the system architecture clearly.
+
+Please analyze the entire project and produce the following:
+
+------------------------------------------------------------
+1. PROJECT OVERVIEW
+------------------------------------------------------------
+
+Explain at a high level:
+
+- What type of system this is (API service, agent system, RAG pipeline, etc.)
+- Main responsibilities of the project
+- How requests flow through the system from entry to response
+
+Provide a step-by-step execution flow like:
+
+Request → Router → Service → Agent → Retrieval → LLM → Tool → Response
+
+
+------------------------------------------------------------
+2. FOLDER-BY-FOLDER EXPLANATION
+------------------------------------------------------------
+
+For each top-level folder, explain:
+
+- Purpose of the folder
+- What kind of logic lives there
+- Whether it belongs to:
+    (a) API layer
+    (b) Business logic
+    (c) Agent orchestration
+    (d) LLM interaction
+    (e) Retrieval / data layer
+    (f) Infrastructure / platform layer
+
+Focus especially on:
+
+- itscd_lib/
+- agents/
+- data_engine/
+- llm_registry/
+- platform/
+- myhr/
+- routers/
+- services/
+- apps/
+
+
+------------------------------------------------------------
+3. ENTRY POINT IDENTIFICATION
+------------------------------------------------------------
+
+Identify:
+
+- FastAPI or application entry file
+- Where the application starts
+- Where routers are registered
+- First function called when a request arrives
+
+
+------------------------------------------------------------
+4. AGENT EXECUTION FLOW
+------------------------------------------------------------
+
+Explain:
+
+- Which class/function starts agent execution
+- How agent decides between LLM, RAG, and tools
+- Main execution methods (run/invoke/execute/etc.)
+
+Provide file paths and function names.
+
+
+------------------------------------------------------------
+5. LLM CALL LOCATION
+------------------------------------------------------------
+
+Identify:
+
+- Exact file(s) where LLM API calls happen
+- Wrapper functions used for model calls
+- Whether fallback logic exists
+
+
+------------------------------------------------------------
+6. RETRIEVAL (RAG) FLOW
+------------------------------------------------------------
+
+Identify:
+
+- Where embeddings are created
+- Where vector search happens
+- Where documents are returned to agent
+
+
+------------------------------------------------------------
+7. TOOL / MCP EXECUTION
+------------------------------------------------------------
+
+Identify:
+
+- Where external tools or APIs are invoked
+- Entry method for tool execution
+
+
+------------------------------------------------------------
+8. DO NOT GUESS
+------------------------------------------------------------
+
+If something is unclear, explicitly say:
+
+"Not enough information from code to determine"
+
+Do not assume architecture.
+
+
+------------------------------------------------------------
+9. OUTPUT FORMAT
+------------------------------------------------------------
+
+Provide:
+
+- Clear sections
+- File paths
+- Function names
+- Short explanation per component
+
+The goal is to create a system map for observability planning.
