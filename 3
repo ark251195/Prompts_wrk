@@ -1,0 +1,27 @@
+Now create an observability implementation plan with:
+
+A) Correlation ID strategy:
+   - where correlation_id is generated
+   - header name to accept from upstream (if present)
+   - how it is stored (contextvars recommended)
+   - how it propagates into logs, traces, and SSE events
+
+B) Tracing:
+   - define spans and names:
+     http.request, agent.run, langgraph.node, tool.invoke, rag.search, llm.generate, db.write
+   - list exact span attributes to set:
+     correlation_id, session_id, user_id_hash, route, tool_name, node_name, model_provider, model_name, prompt_tokens, completion_tokens, total_tokens, latency_ms, status, error_type
+
+C) Metrics:
+   - list counters/histograms/gauges and names
+   - where to emit them in code
+
+D) Log schema:
+   - JSON structure
+   - required fields
+   - redaction rules (no PII)
+
+E) Minimal file changes:
+   - enumerate exact files to touch and what change in each
+
+Output as a checklist + pseudo-code snippets only.
