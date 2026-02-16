@@ -1,0 +1,44 @@
+You are implementing Phase 1 of observability only.
+
+Do NOT implement tracing or metrics yet.
+
+Goal:
+Ensure correlation_id is correctly generated and propagated through the entire request lifecycle.
+
+Tasks:
+
+1. Verify ObservabilityMiddleware:
+   - correlation_id is generated if not present
+   - incoming header is respected if present
+   - correlation_id is stored using contextvars
+   - correlation_id is added to response headers
+
+2. Verify propagation through layers:
+   Confirm correlation_id is accessible in:
+   - router.py chat()
+   - agent_runner.py Runner.run()
+   - _stream.py AsyncGraphStreamer.stream()
+   - tool execution (hr_node.py, uploaded_docs_tool.py)
+   - llm.py model invocation
+   - DBWriter.upload()
+
+3. If correlation_id is not available in any layer:
+   - add minimal changes only
+   - do not refactor architecture
+   - use contextvars instead of passing parameters everywhere
+
+4. Add temporary debug logs (INFO level) at each layer:
+   Example:
+   "[OBSERVE] correlation_id=<id> component=<name>"
+
+5. Output:
+   - exact files modified
+   - exact code snippets added
+   - verification steps using curl or local request
+   - expected console output example
+
+Constraints:
+- No OpenTelemetry spans yet
+- No metrics yet
+- No restructuring of existing logic
+- Minimal safe changes only
