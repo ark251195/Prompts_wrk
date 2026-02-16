@@ -1,0 +1,52 @@
+I want exact code context for instrumentation. Don’t summarize.
+
+For each item below, paste the full function (and any helper it calls directly) and show imports + any relevant globals/config used:
+
+1) main.py
+   - ObservabilityMiddleware definition
+   - middleware registration block (lines ~118-185)
+   - app creation + include_router calls
+
+2) route_info.py
+   - mount_routes() function
+   - routes list definition
+
+3) router.py
+   - async def chat(...) endpoint
+   - any request/response models used
+
+4) agent.py
+   - async def get_agent(...)
+   - what it returns (Runner instance) and what inputs it needs
+
+5) agent_runner.py
+   - Runner.run(...)
+   - what it yields (events) and what state it accepts
+
+6) _stream.py
+   - AsyncGraphStreamer.stream(...)
+   - how astream_events is invoked and what event schema is yielded
+
+7) llm.py
+   - select_model(...)
+   - how model is called (streaming?) and how callbacks are wired
+
+8) hr_node.py
+   - tool class and its main execution method
+   - search client creation and invocation
+
+9) uploaded_docs_tool.py
+   - tool class and main method
+   - where Azure Search is called
+
+10) azure_search_reader.py
+   - fetch_chat_history_from_search(...)
+   - REST call code
+
+11) DBWriter
+   - write method that writes wb_chathistory
+   - where it is called from
+
+Important constraints:
+- Do not guess.
+- Paste code, don’t paraphrase.
