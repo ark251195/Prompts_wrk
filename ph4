@@ -1,0 +1,43 @@
+Implement Phase 4: Agent-level tracing.
+
+Goal:
+Create high-level spans representing agent lifecycle without adding tool, RAG, or LLM spans yet.
+
+Requirements:
+
+1. Add span around agent creation:
+   File: agent.py
+   Function: get_agent(...)
+   Span name: "agent.create"
+
+2. Add span around agent execution:
+   File: agent_runner.py
+   Function: Runner.run(...)
+   Span name: "agent.run"
+
+3. Add span around LangGraph streaming lifecycle:
+   File: _stream.py
+   Function: AsyncGraphStreamer.stream(...)
+   Span name: "langgraph.stream"
+
+4. Parent-child rules:
+   - All spans must automatically be children of "http.chat_request"
+   - Do NOT manually pass span context
+   - Use current tracer context
+
+5. Attributes to include:
+   - correlation_id
+   - agent_type or agent_name
+   - session_id (if available)
+   - environment
+
+6. Constraints:
+   - Do not instrument individual nodes
+   - Do not add tool spans
+   - Do not add LLM spans
+   - No metrics yet
+   - Minimal code changes only
+
+Output:
+- exact code additions
+- expected trace hierarchy example
