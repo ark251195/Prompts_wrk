@@ -1,0 +1,44 @@
+You are implementing Phase 5 (tool-level tracing) in this codebase.
+
+Important:
+- Do NOT assume architecture.
+- First, locate the single/common interface where tools are executed (the choke point).
+  This is typically where tool_name + args are received and a tool is invoked (invoke/ainvoke/call).
+- Only after locating that point, implement tracing there so all tools get traced automatically.
+
+Goals:
+1) Create one OpenTelemetry span per tool call.
+   Span name format: "tool.invoke.<tool_name>" (sanitize tool_name if needed).
+2) Spans must be children of the existing request/agent spans (http.chat_request → agent.run → langgraph.stream).
+   Do not manually pass contexts; rely on current context.
+3) Record errors properly:
+   - record_exception
+   - set span status ERROR
+   - re-raise
+4) Capture PII-safe attributes:
+   - tool.name, tool.call_id (if present)
+   - args keys (not raw values)
+   - approximate args size bytes
+   - result size bytes (approx; do not log content)
+   - correlation_id if available in context
+5) Handle async correctly:
+   - If tool supports async (ainvoke / async __call__), await it.
+   - If tool is sync/blocking, run it in a thread (asyncio.to_thread or anyio.to_thread.run_sync).
+   - Ensure cancellation handling is correct (CancelledError should not be counted as tool failure; mark attribute tool.cancelled=true and re-raise).
+6) Keep changes minimal:
+   - Prefer a single patch at the choke point + at most one reusable helper.
+   - Do not modify each tool implementation.
+
+Deliverables:
+A) Identify and report:
+   - exact file path(s) and function(s) where the choke point is
+   - how tool name/args are represented there
+B) Provide a ready-to-apply code patch implementing the spans (and optional metrics if already available).
+C) Provide a quick verification plan:
+   - run one chat that triggers a tool
+   - expected trace hierarchy snippet showing tool.invoke.<tool_name> under langgraph.stream
+
+Constraints:
+- Do not add spans inside individual LangGraph nodes.
+- Do not add LLM spans yet (that is Phase 6).
+- Do not log raw tool args/results (HR/PII safe).
