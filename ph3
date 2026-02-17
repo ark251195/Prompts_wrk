@@ -1,0 +1,36 @@
+We are implementing Phase 3 only: request-level tracing.
+
+Goal:
+Create the root tracing hierarchy without adding tool, RAG, or LLM spans yet.
+
+Tasks:
+
+1. Add root span in router.py chat():
+   span name: "http.chat_request"
+
+2. Ensure this span becomes parent of:
+   - agent creation
+   - agent.run()
+   - langgraph streaming execution
+
+3. Use OpenTelemetry tracer from existing observability setup.
+
+4. Span attributes to include:
+   - correlation_id
+   - route="/myhr-api/chat"
+   - http.method
+   - environment
+   - user_id_hash (if available, never raw PII)
+
+5. Ensure span closes only after streaming response completes.
+
+6. Do NOT:
+   - add tool spans
+   - add LLM spans
+   - add metrics yet
+   - modify business logic
+
+Output:
+- exact code changes
+- files modified
+- example expected trace tree
