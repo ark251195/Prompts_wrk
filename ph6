@@ -1,0 +1,94 @@
+We are moving to Phase 6 — LLM Observability.
+
+Context
+
+The system already has:
+
+Phase 3: Root request tracing (http.chat_request)
+
+Phase 4: Agent-level spans (agent.create, agent.run, langgraph.stream)
+
+Phase 5: Tool-level tracing implemented at the common tool execution interface
+
+The current trace hierarchy is:
+
+http.chat_request
+   └── agent.run
+         └── langgraph.stream
+               └── tool.invoke.<tool_name>
+
+
+Goal now is to add LLM-level observability so that model execution becomes visible in the same trace.
+
+Objective
+
+Introduce tracing for all LLM invocations such that:
+
+Every LLM generation appears as a child span under the currently active agent span.
+
+Works automatically for all supported models (Azure OpenAI, Vertex AI, Anthropic, etc.).
+
+Requires minimal or zero modification to business logic or agent code.
+
+Uses existing OpenTelemetry tracer infrastructure.
+
+Expected Outcome
+
+Trace hierarchy should become:
+
+http.chat_request
+   └── agent.run
+         └── langgraph.stream
+               ├── tool.invoke.<tool_name>
+               └── llm.generate.<provider_or_model>
+
+Requirements
+
+The implementation should:
+
+Identify the common LLM invocation boundary in the current architecture
+(LLM registry, model wrapper, or generation interface).
+
+Instrument at that level instead of individual model calls.
+
+Each LLM span should capture (PII-safe only):
+
+model name
+
+provider (azure_openai / anthropic / vertex etc.)
+
+request type (chat / completion / embedding if applicable)
+
+prompt token count
+
+completion token count
+
+total tokens
+
+latency
+
+streaming vs non-streaming flag
+
+Do NOT log prompt or response content.
+
+Error & Cancellation Handling
+
+Exceptions must be recorded on the span.
+
+Span should close correctly even if streaming is interrupted or cancelled.
+
+Async Considerations
+
+Ensure tracing works correctly for async and streaming responses.
+
+Span lifetime should match actual LLM generation duration.
+
+Output Expected
+
+Identify the correct instrumentation point in the current architecture.
+
+Propose minimal integration approach.
+
+Provide implementation changes localized to shared LLM abstraction layer.
+
+Ensure compatibility with existing tracing phases.
